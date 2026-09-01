@@ -347,6 +347,28 @@ async function runTestSuite() {
         `);
         assert(hataDefteriWorks, 'Hata Defteri auto-populates mistakes, filters by category, saves student notes and toggles learned archive');
 
+        // Reading Tools: Font Size, Underlining, Highlighting, Notes
+        const readingToolsWork = await client.eval(`
+          switchTab('reading');
+          const initSize = passageFontScale;
+          changePassageFontSize(2);
+          const scaledUp = passageFontScale === initSize + 2;
+          changePassageFontSize(-2);
+
+          const pTextEl = document.getElementById('passage-text-0');
+          const hasLargeFont = pTextEl && pTextEl.classList.contains('passage-content');
+
+          // Note taking
+          savePassageNote(0, 'Passage 1 Main Theme Analysis Note');
+          const noteSaved = localStorage.getItem('yks_day' + DAY_NUM + '_reading_note_0') === 'Passage 1 Main Theme Analysis Note';
+          togglePassageNotes(0);
+          const box = document.getElementById('passage-notes-box-0');
+          const boxOpened = box && !box.classList.contains('hidden');
+
+          return scaledUp && hasLargeFont && noteSaved && boxOpened;
+        `);
+        assert(readingToolsWork, 'Reading Masterclass: Font scaling, note taking, and annotations are fully operational');
+
         // Vocab Flashcard
         const vocabCardWorks = await client.eval(`
           switchTab('vocab');

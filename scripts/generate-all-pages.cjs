@@ -374,6 +374,46 @@ function generateDayHtml(dayConfig) {
         .option-label:hover { border-color: #0284c7; background-color: rgba(2, 132, 199, 0.04); }
         .dark .option-label:hover { border-color: #38bdf8; background-color: rgba(2, 132, 199, 0.12); }
         
+        /* Reading Annotations & Typography */
+        .reading-underlined {
+            text-decoration: underline !important;
+            text-decoration-color: #0284c7 !important;
+            text-decoration-thickness: 3px !important;
+            text-underline-offset: 4px !important;
+            font-weight: 600 !important;
+        }
+        .dark .reading-underlined {
+            text-decoration-color: #38bdf8 !important;
+        }
+        .reading-hl-yellow {
+            background-color: rgba(253, 224, 71, 0.45) !important;
+            color: inherit !important;
+            padding: 1px 3px !important;
+            border-radius: 4px !important;
+            box-shadow: inset 0 -2px 0 #eab308 !important;
+        }
+        .dark .reading-hl-yellow {
+            background-color: rgba(234, 179, 8, 0.35) !important;
+            box-shadow: inset 0 -2px 0 #ca8a04 !important;
+        }
+        .reading-hl-green {
+            background-color: rgba(110, 231, 183, 0.45) !important;
+            color: inherit !important;
+            padding: 1px 3px !important;
+            border-radius: 4px !important;
+            box-shadow: inset 0 -2px 0 #10b981 !important;
+        }
+        .dark .reading-hl-green {
+            background-color: rgba(16, 185, 129, 0.35) !important;
+            box-shadow: inset 0 -2px 0 #059669 !important;
+        }
+        .passage-content {
+            font-size: 1.125rem;
+            line-height: 1.95;
+            letter-spacing: 0.015em;
+            user-select: text;
+        }
+        
         @media print {
             .no-print, header, footer, .tab-btn, .hata-subj-btn, .hata-stat-btn, button, #focusAudioBtn, #printMenuDropdown {
                 display: none !important;
@@ -900,6 +940,24 @@ function generateDayHtml(dayConfig) {
                     </div>
                 </div>
 
+                <!-- Reading Experience Toolbar -->
+                <div class="flex flex-wrap items-center justify-between gap-3 p-3.5 rounded-2xl bg-teal-500/5 dark:bg-teal-950/20 border border-teal-500/20 text-xs no-print">
+                    <div class="flex items-center space-x-2 text-teal-800 dark:text-teal-300 font-medium">
+                        <i class="fa-solid fa-highlighter text-teal-600 dark:text-teal-400"></i>
+                        <span>Pasaj metninde sözcük seçerek <b>Altını Çizebilir</b>, <b>Vurgulayabilir</b> veya <b>Not Alabilirsiniz</b>.</span>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <div class="flex items-center space-x-1.5">
+                            <span class="text-slate-500 dark:text-slate-400 font-bold">Yazı Boyutu:</span>
+                            <div class="flex items-center bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl p-0.5 shadow-sm">
+                                <button onclick="changePassageFontSize(-2)" class="px-2.5 py-1 text-slate-700 dark:text-slate-200 hover:text-teal-600 font-bold text-xs" title="Yazıyı Küçült">A-</button>
+                                <span id="reading-font-size-label" class="px-2 font-mono font-bold text-teal-600 dark:text-teal-400 text-xs border-x border-slate-200 dark:border-slate-800">18px</span>
+                                <button onclick="changePassageFontSize(2)" class="px-2.5 py-1 text-slate-700 dark:text-slate-200 hover:text-teal-600 font-bold text-xs" title="Yazıyı Büyüt">A+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Questions Container -->
                 <div id="questions-container-reading" class="space-y-8">
                     <!-- Populated by JS -->
@@ -1081,6 +1139,7 @@ function generateDayHtml(dayConfig) {
             renderHataDefteri();
             updateScoresAndKarne();
             initTimers();
+            applyReadingFontSize();
 
             // Render KaTeX Math formulas
             if (typeof renderMathInElement !== 'undefined') {
@@ -1418,17 +1477,73 @@ function generateDayHtml(dayConfig) {
                 });
             }
 
-            container.innerHTML = passagesMap.map((pGroup, pIdx) => \`
-                <div class="glass-card rounded-3xl p-6 border border-slate-200 dark:border-slate-800 shadow-md space-y-6">
+            container.innerHTML = passagesMap.map((pGroup, pIdx) => {
+                const savedAnnotation = localStorage.getItem('yks_day' + DAY_NUM + '_reading_annotations_' + pIdx);
+                const savedNote = localStorage.getItem('yks_day' + DAY_NUM + '_reading_note_' + pIdx) || '';
+                const passageTextHtml = savedAnnotation || pGroup.passage.text;
+
+                return \`
+                <div class="glass-card rounded-3xl p-6 sm:p-7 border border-slate-200 dark:border-slate-800 shadow-md space-y-6">
                     <!-- Passage Box -->
-                    <div class="p-5 rounded-2xl bg-teal-50/80 dark:bg-teal-950/30 border border-teal-200 dark:border-teal-800/60 space-y-2">
-                        <div class="flex items-center justify-between text-xs font-black text-teal-700 dark:text-teal-400">
-                            <span><i class="fa-solid fa-book-open mr-1.5"></i> \${pGroup.passage.title}</span>
-                            <span class="text-[10px] uppercase tracking-wider bg-teal-500/10 px-2.5 py-0.5 rounded-full">Akademik Metin \${pIdx + 1}</span>
+                    <div class="p-6 rounded-2xl bg-teal-50/70 dark:bg-teal-950/30 border border-teal-200/80 dark:border-teal-800/60 space-y-4">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-teal-200/60 dark:border-teal-800/40 pb-3">
+                            <div class="flex items-center space-x-2">
+                                <span class="w-7 h-7 rounded-lg bg-teal-600 text-white font-black text-xs flex items-center justify-center font-mono shadow-sm">
+                                    \${pIdx + 1}
+                                </span>
+                                <h3 class="text-sm sm:text-base font-black text-teal-950 dark:text-teal-300">
+                                    \${pGroup.passage.title}
+                                </h3>
+                            </div>
+
+                            <!-- Passage Action Toolbar -->
+                            <div class="flex flex-wrap items-center gap-1.5 text-xs no-print">
+                                <button onclick="applyPassageFormatting(\${pIdx}, 'underline')" class="px-2.5 py-1 rounded-lg bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 hover:border-sky-500 text-slate-700 dark:text-slate-200 font-bold transition flex items-center space-x-1" title="Seçili metnin altını çizer">
+                                    <i class="fa-solid fa-underline text-sky-500"></i>
+                                    <span>Altını Çiz</span>
+                                </button>
+                                <button onclick="applyPassageFormatting(\${pIdx}, 'yellow')" class="px-2.5 py-1 rounded-lg bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 hover:border-yellow-500 text-slate-700 dark:text-slate-200 font-bold transition flex items-center space-x-1" title="Sarı fosforlu kalemle vurgular">
+                                    <i class="fa-solid fa-highlighter text-yellow-500"></i>
+                                    <span>Vurgula</span>
+                                </button>
+                                <button onclick="applyPassageFormatting(\${pIdx}, 'green')" class="px-2.5 py-1 rounded-lg bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 hover:border-emerald-500 text-slate-700 dark:text-slate-200 font-bold transition flex items-center space-x-1" title="Yeşil ana fikir kalemi">
+                                    <i class="fa-solid fa-marker text-emerald-500"></i>
+                                    <span>Ana Fikir</span>
+                                </button>
+                                <button onclick="togglePassageNotes(\${pIdx})" id="btn-toggle-note-\${pIdx}" class="px-2.5 py-1 rounded-lg bg-teal-600 hover:bg-teal-500 text-white font-bold transition flex items-center space-x-1 shadow-sm">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                    <span>Notlarım \${savedNote && savedNote.trim() ? '<span class=\"ml-1 w-2 h-2 rounded-full bg-amber-300 inline-block\"></span>' : ''}</span>
+                                </button>
+                                <button onclick="clearPassageAnnotations(\${pIdx})" class="px-2 py-1 rounded-lg text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition" title="Tüm altı çizili ve vurgulu yerleri temizle">
+                                    <i class="fa-solid fa-eraser"></i>
+                                </button>
+                            </div>
                         </div>
-                        <p class="text-xs sm:text-sm text-slate-800 dark:text-slate-200 leading-relaxed select-text font-serif italic">
-                            \${pGroup.passage.text}
-                        </p>
+
+                        <!-- Passage Text with Larger Font (Default 18px, user scalable) -->
+                        <div id="passage-text-\${pIdx}" data-passage-index="\${pIdx}" class="passage-content text-base sm:text-lg leading-relaxed md:leading-8 text-slate-800 dark:text-slate-100 font-serif select-text tracking-wide transition-all">
+                            \${passageTextHtml}
+                        </div>
+
+                        <!-- Note-Taking Expandable Drawer -->
+                        <div id="passage-notes-box-\${pIdx}" class="\${savedNote && savedNote.trim() ? '' : 'hidden'} mt-4 p-4 rounded-2xl bg-white dark:bg-slate-900 border border-teal-200 dark:border-teal-800/80 shadow-inner space-y-3 no-print">
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-black text-teal-800 dark:text-teal-300 flex items-center space-x-1.5">
+                                    <i class="fa-solid fa-note-sticky text-amber-500"></i>
+                                    <span>📝 Pasaj \${pIdx + 1} Çözümleme & Kelime Notlarım</span>
+                                </span>
+                                <div class="flex items-center space-x-2 text-[11px]">
+                                    <span id="passage-note-status-\${pIdx}" class="text-slate-400 font-mono">Otomatik kaydedildi</span>
+                                    <button onclick="copyPassageNote(\${pIdx})" class="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-teal-600 font-bold" title="Panoya Kopyala">
+                                        <i class="fa-regular fa-copy"></i>
+                                    </button>
+                                    <button onclick="clearPassageNote(\${pIdx})" class="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-rose-600 font-bold" title="Notu Temizle">
+                                        <i class="fa-regular fa-trash-can"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <textarea id="passage-note-input-\${pIdx}" oninput="savePassageNote(\${pIdx}, this.value)" rows="3" class="w-full p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-xs sm:text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-teal-500 outline-none resize-y transition custom-scrollbar font-sans" placeholder="Bu pasajın ana fikri, çıkarımları ve bilmediğiniz sözcükleri buraya not alın...">\${savedNote}</textarea>
+                        </div>
                     </div>
 
                     <!-- Questions for this Passage -->
@@ -1485,7 +1600,8 @@ function generateDayHtml(dayConfig) {
                         }).join('')}
                     </div>
                 </div>
-            \`).join('');
+                \`;
+            }).join('');
         }
 
         function renderNavPills() {
@@ -1865,6 +1981,216 @@ function generateDayHtml(dayConfig) {
         }
 
         // =========================================================
+        // READING PASSAGE TOOLS: HIGHLIGHTING, UNDERLINE & NOTES
+        // =========================================================
+        let passageFontScale = 18;
+
+        function changePassageFontSize(delta) {
+            passageFontScale = Math.min(26, Math.max(14, passageFontScale + delta));
+            localStorage.setItem('yks_reading_font_size', passageFontScale);
+            applyReadingFontSize();
+        }
+
+        function applyReadingFontSize() {
+            const saved = localStorage.getItem('yks_reading_font_size');
+            if (saved) passageFontScale = parseInt(saved, 10);
+            document.querySelectorAll('.passage-content').forEach(el => {
+                el.style.fontSize = passageFontScale + 'px';
+                el.style.lineHeight = (passageFontScale * 1.85) + 'px';
+            });
+            const label = document.getElementById('reading-font-size-label');
+            if (label) label.innerText = passageFontScale + 'px';
+        }
+
+        function applyPassageFormatting(pIdx, type) {
+            const textEl = document.getElementById('passage-text-' + pIdx);
+            if (!textEl) return;
+
+            const selection = window.getSelection();
+            if (!selection.rangeCount || selection.isCollapsed) {
+                alert('Lütfen önce pasaj üzerinde altını çizmek veya vurgulamak istediğiniz bir sözcük ya da cümleyi seçin.');
+                return;
+            }
+
+            const range = selection.getRangeAt(0);
+            let container = range.commonAncestorContainer;
+            if (container.nodeType === 3) container = container.parentElement;
+            if (!textEl.contains(container)) {
+                alert('Lütfen seçimi doğrudan bu pasaj metni içinden yapın.');
+                return;
+            }
+
+            const selectedText = selection.toString().trim();
+            if (!selectedText) return;
+
+            if (type === 'underline') {
+                const span = document.createElement('span');
+                span.className = 'reading-underlined';
+                try {
+                    range.surroundContents(span);
+                } catch(e) {
+                    document.execCommand('underline', false, null);
+                }
+            } else if (type === 'yellow') {
+                const mark = document.createElement('mark');
+                mark.className = 'reading-hl-yellow';
+                try {
+                    range.surroundContents(mark);
+                } catch(e) {
+                    document.execCommand('hiliteColor', false, '#fef08a');
+                }
+            } else if (type === 'green') {
+                const mark = document.createElement('mark');
+                mark.className = 'reading-hl-green';
+                try {
+                    range.surroundContents(mark);
+                } catch(e) {
+                    document.execCommand('hiliteColor', false, '#a7f3d0');
+                }
+            }
+
+            selection.removeAllRanges();
+            savePassageAnnotationHTML(pIdx);
+            hideFloatingToolbar();
+        }
+
+        function applyFloatingAnnotation(type) {
+            if (activePassageIndex === null || !activeSelectionRange) return;
+            const pIdx = activePassageIndex;
+            const textEl = document.getElementById('passage-text-' + pIdx);
+            if (!textEl) return;
+
+            const selection = window.getSelection();
+            if (type === 'note') {
+                const selectedText = selection.toString().trim();
+                appendSelectedToPassageNote(pIdx, selectedText);
+            } else {
+                applyPassageFormatting(pIdx, type);
+            }
+            hideFloatingToolbar();
+        }
+
+        function savePassageAnnotationHTML(pIdx) {
+            const textEl = document.getElementById('passage-text-' + pIdx);
+            if (textEl) {
+                localStorage.setItem('yks_day' + DAY_NUM + '_reading_annotations_' + pIdx, textEl.innerHTML);
+            }
+        }
+
+        function clearPassageAnnotations(pIdx) {
+            if (!confirm('Bu pasajdaki tüm altı çizili ve vurgulu yerleri temizlemek istediğinize emin misiniz?')) return;
+            const textEl = document.getElementById('passage-text-' + pIdx);
+            const db = window.EXAM_DATABASE;
+            if (!textEl || !db || !db.reading) return;
+            
+            const pGroup = db.reading[pIdx * 4];
+            if (pGroup && pGroup.passage) {
+                textEl.innerHTML = pGroup.passage.text;
+                localStorage.removeItem('yks_day' + DAY_NUM + '_reading_annotations_' + pIdx);
+            }
+        }
+
+        function togglePassageNotes(pIdx) {
+            const box = document.getElementById('passage-notes-box-' + pIdx);
+            if (box) {
+                box.classList.toggle('hidden');
+                if (!box.classList.contains('hidden')) {
+                    const input = document.getElementById('passage-note-input-' + pIdx);
+                    if (input) input.focus();
+                }
+            }
+        }
+
+        function savePassageNote(pIdx, val) {
+            localStorage.setItem('yks_day' + DAY_NUM + '_reading_note_' + pIdx, val);
+            const statusEl = document.getElementById('passage-note-status-' + pIdx);
+            if (statusEl) {
+                statusEl.innerHTML = '<span class="text-emerald-500 font-bold"><i class="fa-solid fa-check"></i> Kaydedildi</span>';
+                setTimeout(() => {
+                    if (statusEl) statusEl.innerHTML = '<span class="text-slate-400 font-mono">Otomatik kaydedildi</span>';
+                }, 1500);
+            }
+            const btn = document.getElementById('btn-toggle-note-' + pIdx);
+            if (btn) {
+                const indicator = (val && val.trim()) ? ' <span class="ml-1 w-2 h-2 rounded-full bg-amber-300 inline-block"></span>' : '';
+                btn.innerHTML = '<i class="fa-solid fa-pen-to-square mr-1"></i> Notlarım' + indicator;
+            }
+        }
+
+        function copyPassageNote(pIdx) {
+            const input = document.getElementById('passage-note-input-' + pIdx);
+            if (input && input.value) {
+                navigator.clipboard.writeText(input.value);
+                alert('Pasaj notunuz panoya kopyalandı!');
+            }
+        }
+
+        function clearPassageNote(pIdx) {
+            if (confirm('Bu pasaj için aldığınız notu silmek istediğinize emin misiniz?')) {
+                const input = document.getElementById('passage-note-input-' + pIdx);
+                if (input) input.value = '';
+                savePassageNote(pIdx, '');
+            }
+        }
+
+        function appendSelectedToPassageNote(pIdx, text) {
+            const input = document.getElementById('passage-note-input-' + pIdx);
+            const box = document.getElementById('passage-notes-box-' + pIdx);
+            if (box && box.classList.contains('hidden')) {
+                box.classList.remove('hidden');
+            }
+            if (input && text) {
+                const prefix = input.value && input.value.trim() ? input.value + '\\n• ' : '• ';
+                input.value = prefix + text;
+                savePassageNote(pIdx, input.value);
+            }
+        }
+
+        let activeSelectionRange = null;
+        let activePassageIndex = null;
+
+        function handleReadingTextSelection() {
+            const selection = window.getSelection();
+            const floatingToolbar = document.getElementById('reading-floating-toolbar');
+            if (!floatingToolbar) return;
+
+            if (!selection.rangeCount || selection.isCollapsed) {
+                hideFloatingToolbar();
+                return;
+            }
+
+            const range = selection.getRangeAt(0);
+            let container = range.commonAncestorContainer;
+            if (container.nodeType === 3) container = container.parentElement;
+            const passageEl = container.closest ? container.closest('.passage-content') : null;
+
+            if (!passageEl) {
+                hideFloatingToolbar();
+                return;
+            }
+
+            const pIdx = parseInt(passageEl.getAttribute('data-passage-index'), 10);
+            activePassageIndex = pIdx;
+            activeSelectionRange = range;
+
+            const rect = range.getBoundingClientRect();
+            if (rect.width > 0 && rect.height > 0) {
+                floatingToolbar.style.top = Math.max(10, rect.top - 46) + 'px';
+                floatingToolbar.style.left = Math.max(10, rect.left + (rect.width / 2) - 130) + 'px';
+                floatingToolbar.classList.remove('hidden');
+            } else {
+                hideFloatingToolbar();
+            }
+        }
+
+        function hideFloatingToolbar() {
+            const floatingToolbar = document.getElementById('reading-floating-toolbar');
+            if (floatingToolbar) floatingToolbar.classList.add('hidden');
+        }
+
+        document.addEventListener('selectionchange', handleReadingTextSelection);
+
+        // =========================================================
         // VOCABULARY LEITNER FLASHCARDS
         // =========================================================
         function renderVocabCards() {
@@ -2063,6 +2389,22 @@ function generateDayHtml(dayConfig) {
             }
         }
     </script>
+
+    <!-- FLOATING SELECTION TOOLBAR FOR READING PASSAGES -->
+    <div id="reading-floating-toolbar" class="hidden fixed z-50 bg-slate-900/95 text-white backdrop-blur-md px-2 py-1.5 rounded-2xl border border-slate-700 shadow-2xl flex items-center space-x-1.5 text-xs select-none no-print">
+        <button onmousedown="event.preventDefault()" onclick="applyFloatingAnnotation('underline')" class="px-2.5 py-1 rounded-xl bg-slate-800 hover:bg-sky-600 font-bold text-sky-400 hover:text-white transition flex items-center space-x-1" title="Altını Çiz">
+            <i class="fa-solid fa-underline"></i> <span>Altını Çiz</span>
+        </button>
+        <button onmousedown="event.preventDefault()" onclick="applyFloatingAnnotation('yellow')" class="px-2.5 py-1 rounded-xl bg-yellow-500/20 hover:bg-yellow-500 font-bold text-yellow-400 hover:text-slate-950 transition flex items-center space-x-1" title="Sarı Vurgula">
+            <i class="fa-solid fa-highlighter"></i> <span>Vurgula</span>
+        </button>
+        <button onmousedown="event.preventDefault()" onclick="applyFloatingAnnotation('green')" class="px-2.5 py-1 rounded-xl bg-emerald-500/20 hover:bg-emerald-500 font-bold text-emerald-400 hover:text-slate-950 transition flex items-center space-x-1" title="Yeşil Ana Fikir">
+            <i class="fa-solid fa-marker"></i> <span>Ana Fikir</span>
+        </button>
+        <button onmousedown="event.preventDefault()" onclick="applyFloatingAnnotation('note')" class="px-2.5 py-1 rounded-xl bg-teal-500/20 hover:bg-teal-500 font-bold text-teal-300 hover:text-slate-950 transition flex items-center space-x-1" title="Nota Ekle">
+            <i class="fa-solid fa-pen-to-square"></i> <span>Not Ekle</span>
+        </button>
+    </div>
 </body>
 </html>
 `;
