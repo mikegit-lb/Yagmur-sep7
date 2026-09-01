@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="tr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YKS & YDT 6 Günlük Sınav Merkezi • Ana Panel</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f7ff', 100: '#e0effe', 200: '#bae0fd', 300: '#7cc6fc', 400: '#38a8f8',
+                            500: '#0e8ce9', 600: '#026fc7', 700: '#0358a1', 800: '#074b84', 900: '#0c3f6e', 950: '#082849',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'Inter', 'system-ui', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .glass-card {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(51, 65, 85, 0.6);
+        }
+        .day-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(56, 189, 248, 0.6);
+            box-shadow: 0 20px 25px -5px rgba(14, 140, 233, 0.15), 0 8px 10px -6px rgba(14, 140, 233, 0.15);
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-sky-500 selection:text-white">
+
+    <!-- TOP HEADER -->
+    <header class="sticky top-0 z-50 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 px-6 py-5">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center space-x-3 text-center md:text-left">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-sky-500 via-indigo-500 to-rose-500 flex items-center justify-center text-white text-2xl font-black shadow-lg">
+                    🎯
+                </div>
+                <div>
+                    <h1 class="text-xl sm:text-2xl font-black tracking-tight bg-gradient-to-r from-sky-400 via-indigo-300 to-rose-400 bg-clip-text text-transparent">
+                        YKS & YDT 6 GÜNLÜK SINAV MERKEZİ
+                    </h1>
+                    <p class="text-xs sm:text-sm text-slate-400 font-medium">Her Gün 182 Soru (1.092 Soru Toplam) • 8 Sekmeli İnteraktif SPA • Akıllı Hata Defteri</p>
+                </div>
+            </div>
+
+            <!-- Global Badge & Actions -->
+            <div class="flex items-center space-x-3">
+                <span class="px-3.5 py-1.5 rounded-full text-xs font-black bg-rose-500/10 text-rose-400 border border-rose-500/20 uppercase tracking-wider flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>
+                    Eşit Soru Sayısı & Dengeli Anahtar
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-10">
+
+        <!-- HERO STATS BANNER -->
+        <div class="glass-card rounded-3xl p-6 sm:p-8 border border-slate-800 relative overflow-hidden">
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center sm:text-left">
+                <div class="space-y-1">
+                    <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Toplam Soru Havuzu</span>
+                    <div class="text-2xl sm:text-3xl font-black text-white">1.092 Soru</div>
+                    <p class="text-[11px] text-sky-400 font-semibold">182 Soru / Gün</p>
+                </div>
+                <div class="space-y-1">
+                    <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">🇬🇧 YDT İngilizce</span>
+                    <div class="text-2xl sm:text-3xl font-black text-sky-400">600 Soru</div>
+                    <p class="text-[11px] text-slate-400 font-semibold">100 Soru / Gün</p>
+                </div>
+                <div class="space-y-1">
+                    <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">🇹🇷 TYT Türkçe & Mat</span>
+                    <div class="text-2xl sm:text-3xl font-black text-emerald-400">420 Soru</div>
+                    <p class="text-[11px] text-slate-400 font-semibold">40 Tr + 30 Mat / Gün</p>
+                </div>
+                <div class="space-y-1">
+                    <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">📚 Reading & Vocab</span>
+                    <div class="text-2xl sm:text-3xl font-black text-pink-400">72 Soru + 90 Kelime</div>
+                    <p class="text-[11px] text-slate-400 font-semibold">12 Reading + 15 Vocab / Gün</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 6-DAY INTERACTIVE MODULES GRID -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+            <!-- DAY 1 -->
+            <a href="gun-1.html" class="day-card group glass-card rounded-3xl p-6 border border-slate-800 transition-all duration-300 flex flex-col justify-between space-y-5">
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="px-3 py-1 rounded-xl font-black text-xs font-mono bg-sky-500/10 text-sky-400 border border-sky-500/20">
+                            GÜN 01
+                        </span>
+                        <span class="text-[11px] font-bold text-slate-400 flex items-center gap-1">
+                            <i class="fa-solid fa-layer-group text-sky-400"></i> 182 Soru
+                        </span>
+                    </div>
+                    <h3 class="text-lg font-black text-white group-hover:text-sky-400 transition">
+                        Temel Değerlendirme & Teşhis
+                    </h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        Tüm derslerdeki mevcut net seviyenizi teşhis edin, eksik soru tiplerini belirleyin ve akıllı hata defterinizi başlatın.
+                    </p>
+                </div>
+
+                <div class="space-y-2 pt-3 border-t border-slate-800/80 text-[11px] text-slate-300">
+                    <div class="flex justify-between">
+                        <span>🇬🇧 YDT İngilizce:</span> <b class="text-sky-400">100 Soru</b>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>🇹🇷 TYT Türkçe & Mat:</span> <b class="text-emerald-400">40 Tr + 30 Mat</b>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>📚 Reading & Vocab:</span> <b class="text-pink-400">12 Soru + 15 Kelime</b>
+                    </div>
+                </div>
+
+                <div class="w-full py-2.5 rounded-xl bg-slate-800 group-hover:bg-sky-600 text-white font-bold text-xs text-center transition shadow-md flex items-center justify-center space-x-2">
+                    <span>1. Gün Sınav Merkezine Git</span>
+                    <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                </div>
+            </a>
+
+            <!-- DAY 2 -->
+            <a href="gun-2-ydt-ingilizce.html" class="day-card group glass-card rounded-3xl p-6 border border-slate-800 transition-all duration-300 flex flex-col justify-between space-y-5">
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="px-3 py-1 rounded-xl font-black text-xs font-mono bg-sky-500/10 text-sky-400 border border-sky-500/20">
+                            GÜN 02
+                        </span>
+                        <span class="text-[11px] font-bold text-slate-400 flex items-center gap-1">
+                            <i class="fa-solid fa-layer-group text-sky-400"></i> 182 Soru
+                        </span>
+                    </div>
+                    <h3 class="text-lg font-black text-white group-hover:text-sky-400 transition">
+                        YDT İngilizce Derinlemesine & Gramer
+                    </h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        Devrik yapılar (Inversion), kısaltmalar (Participles), Mixed Conditionals ve Preposition ustalık soru bankası.
+                    </p>
+                </div>
+
+                <div class="space-y-2 pt-3 border-t border-slate-800/80 text-[11px] text-slate-300">
+                    <div class="flex justify-between">
+                        <span>🇬🇧 YDT İngilizce:</span> <b class="text-sky-400">100 Soru</b>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>🇹🇷 TYT Türkçe & Mat:</span> <b class="text-emerald-400">40 Tr + 30 Mat</b>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>📚 Reading & Vocab:</span> <b class="text-pink-400">12 Soru + 15 Kelime</b>
+                    </div>
+                </div>
+
+                <div class="w-full py-2.5 rounded-xl bg-slate-800 group-hover:bg-sky-600 text-white font-bold text-xs text-center transition shadow-md flex items-center justify-center space-x-2">
+                    <span>2. Gün Sınav Merkezine Git</span>
+                    <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                </div>
+            </a>
+
+            <!-- DAY 3 -->
+            <a href="gun-3-tyt-turkce.html" class="day-card group glass-card rounded-3xl p-6 border border-slate-800 transition-all duration-300 flex flex-col justify-between space-y-5">
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="px-3 py-1 rounded-xl font-black text-xs font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                            GÜN 03
+                        </span>
+                        <span class="text-[11px] font-bold text-slate-400 flex items-center gap-1">
+                            <i class="fa-solid fa-layer-group text-emerald-400"></i> 182 Soru
+                        </span>
+                    </div>
+                    <h3 class="text-lg font-black text-white group-hover:text-emerald-400 transition">
+                        TYT Türkçe & Paragraf Mastery
+                    </h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        Paragraf hızı ve odaklanma optimizasyonu, karma dil bilgisi, fiilimsiler, cümle ögeleri ve anlatım bozuklukları.
+                    </p>
+                </div>
+
+                <div class="space-y-2 pt-3 border-t border-slate-800/80 text-[11px] text-slate-300">
+                    <div class="flex justify-between">
+                        <span>🇬🇧 YDT İngilizce:</span> <b class="text-sky-400">100 Soru</b>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>🇹🇷 TYT Türkçe & Mat:</span> <b class="text-emerald-400">40 Tr + 30 Mat</b>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>📚 Reading & Vocab:</span> <b class="text-pink-400">12 Soru + 15 Kelime</b>
+                    </div>
+                </div>
+
+                <div class="w-full py-2.5 rounded-xl bg-slate-800 group-hover:bg-emerald-600 text-white font-bold text-xs text-center transition shadow-md flex items-center justify-center space-x-2">
+                    <span>3. Gün Sınav Merkezine Git</span>
+                    <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                </div>
+            </a>
+
+            <!-- DAY 4 -->
+            <a href="gun-4-tyt-matematik.html" class="day-card group glass-card rounded-3xl p-6 border border-slate-800 transition-all duration-300 flex flex-col justify-between space-y-5">
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="px-3 py-1 rounded-xl font-black text-xs font-mono bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                            GÜN 04
+                        </span>
+                        <span class="text-[11px] font-bold text-slate-400 flex items-center gap-1">
+                            <i class="fa-solid fa-layer-group text-amber-400"></i> 182 Soru
+                        </span>
+                    </div>
+                    <h3 class="text-lg font-black text-white group-hover:text-amber-400 transition">
+                        TYT Matematik Temel İnşa & Mantık
+                    </h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        İşlem hatasını sıfırlama, formülsüz modelleme yöntemleri, yeni nesil problemler ve temel geometri pratikleri.
+                    </p>
+                </div>
+
+                <div class="space-y-2 pt-3 border-t border-slate-800/80 text-[11px] text-slate-300">
+                    <div class="flex justify-between">
+                        <span>🇬🇧 YDT İngilizce:</span> <b class="text-sky-400">100 Soru</b>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>🇹🇷 TYT Türkçe & Mat:</span> <b class="text-emerald-400">40 Tr + 30 Mat</b>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>📚 Reading & Vocab:</span> <b class="text-pink-400">12 Soru + 15 Kelime</b>
+                    </div>
+                </div>
+
+                <div class="w-full py-2.5 rounded-xl bg-slate-800 group-hover:bg-amber-600 text-white font-bold text-xs text-center transition shadow-md flex items-center justify-center space-x-2">
+                    <span>4. Gün Sınav Merkezine Git</span>
+                    <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                </div>
+            </a>
+
+            <!-- DAY 5 -->
+            <a href="gun-5-ydt-reading.html" class="day-card group glass-card rounded-3xl p-6 border border-slate-800 transition-all duration-300 flex flex-col justify-between space-y-5">
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="px-3 py-1 rounded-xl font-black text-xs font-mono bg-teal-500/10 text-teal-400 border border-teal-500/20">
+                            GÜN 05
+                        </span>
+                        <span class="text-[11px] font-bold text-slate-400 flex items-center gap-1">
+                            <i class="fa-solid fa-layer-group text-teal-400"></i> 182 Soru
+                        </span>
+                    </div>
+                    <h3 class="text-lg font-black text-white group-hover:text-teal-400 transition">
+                        YDT Reading Masterclass & Analiz
+                    </h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        Akademik metinleri hızlı çözümleme teknikleri, ana fikir çıkarma, yazarın tutumu ve bağlamsal kelime analizleri.
+                    </p>
+                </div>
+
+                <div class="space-y-2 pt-3 border-t border-slate-800/80 text-[11px] text-slate-300">
+                    <div class="flex justify-between">
+                        <span>🇬🇧 YDT İngilizce:</span> <b class="text-sky-400">100 Soru</b>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>🇹🇷 TYT Türkçe & Mat:</span> <b class="text-emerald-400">40 Tr + 30 Mat</b>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>📚 Reading & Vocab:</span> <b class="text-pink-400">12 Soru + 15 Kelime</b>
+                    </div>
+                </div>
+
+                <div class="w-full py-2.5 rounded-xl bg-slate-800 group-hover:bg-teal-600 text-white font-bold text-xs text-center transition shadow-md flex items-center justify-center space-x-2">
+                    <span>5. Gün Sınav Merkezine Git</span>
+                    <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                </div>
+            </a>
+
+            <!-- DAY 6 -->
+            <a href="gun-6-simulasyon.html" class="day-card group glass-card rounded-3xl p-6 border border-slate-800 transition-all duration-300 flex flex-col justify-between space-y-5">
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="px-3 py-1 rounded-xl font-black text-xs font-mono bg-rose-500/10 text-rose-400 border border-rose-500/20">
+                            GÜN 06
+                        </span>
+                        <span class="text-[11px] font-bold text-slate-400 flex items-center gap-1">
+                            <i class="fa-solid fa-layer-group text-rose-400"></i> 182 Soru
+                        </span>
+                    </div>
+                    <h3 class="text-lg font-black text-white group-hover:text-rose-400 transition">
+                        Tam Deneme Simülasyonu (Büyük Final)
+                    </h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        Gerçek sınav koşullarında tam süre, optik odaklanma ve sınav stratejisi provası. Büyük karne ve 6 günlük genel hata defteri.
+                    </p>
+                </div>
+
+                <div class="space-y-2 pt-3 border-t border-slate-800/80 text-[11px] text-slate-300">
+                    <div class="flex justify-between">
+                        <span>🇬🇧 YDT İngilizce:</span> <b class="text-sky-400">100 Soru</b>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>🇹🇷 TYT Türkçe & Mat:</span> <b class="text-emerald-400">40 Tr + 30 Mat</b>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>📚 Reading & Vocab:</span> <b class="text-pink-400">12 Soru + 15 Kelime</b>
+                    </div>
+                </div>
+
+                <div class="w-full py-2.5 rounded-xl bg-slate-800 group-hover:bg-rose-600 text-white font-bold text-xs text-center transition shadow-md flex items-center justify-center space-x-2">
+                    <span>6. Gün Sınav Merkezine Git</span>
+                    <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                </div>
+            </a>
+
+        </div>
+
+        <!-- FEATURES SECTION -->
+        <section class="rounded-3xl glass-card border border-slate-800 p-6 sm:p-8 space-y-6">
+            <h3 class="text-lg sm:text-xl font-black text-white flex items-center space-x-2">
+                <i class="fa-solid fa-wand-magic-sparkles text-amber-400"></i> <span>Tüm Günlerde Bulunan Ortak Gelişmiş Özellikler</span>
+            </h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-xs sm:text-sm text-slate-300">
+                <div class="flex items-start space-x-3 p-3.5 rounded-2xl bg-slate-900/60 border border-slate-800">
+                    <i class="fa-solid fa-book-bookmark text-rose-500 text-base mt-0.5"></i>
+                    <div>
+                        <strong class="text-white block">Akıllı Hata Defteri:</strong>
+                        Yanlış ve boş sorularınızı otomatik toplar, konu etiketlerine göre filtreler ve özel not alma imkanı sunar.
+                    </div>
+                </div>
+
+                <div class="flex items-start space-x-3 p-3.5 rounded-2xl bg-slate-900/60 border border-slate-800">
+                    <i class="fa-solid fa-file-pdf text-rose-400 text-base mt-0.5"></i>
+                    <div>
+                        <strong class="text-white block">Tek Tıkla PDF Çıktısı:</strong>
+                        Her sekmeyi, tüm 182 soruluk deneme kitapçığını ve kişisel hata defterinizi PDF olarak anında indirin veya yazdırın.
+                    </div>
+                </div>
+
+                <div class="flex items-start space-x-3 p-3.5 rounded-2xl bg-slate-900/60 border border-slate-800">
+                    <i class="fa-solid fa-shield-halved text-emerald-400 text-base mt-0.5"></i>
+                    <div>
+                        <strong class="text-white block">Arka Arkaya Aynı Şık Olmama Garantisi:</strong>
+                        Tüm derslerdeki cevap anahtarları hiçbir zaman arka arkaya aynı şık gelmeyecek biçimde dengelenmiştir.
+                    </div>
+                </div>
+
+                <div class="flex items-start space-x-3 p-3.5 rounded-2xl bg-slate-900/60 border border-slate-800">
+                    <i class="fa-solid fa-cloud-rain text-cyan-400 text-base mt-0.5"></i>
+                    <div>
+                        <strong class="text-white block">Web Audio Odak Sesi:</strong>
+                        Düşük geçişli beyaz gürültü yağmur efekti ile sınav sırasında maksimum odaklanma sağlar.
+                    </div>
+                </div>
+
+                <div class="flex items-start space-x-3 p-3.5 rounded-2xl bg-slate-900/60 border border-slate-800">
+                    <i class="fa-solid fa-brain text-pink-400 text-base mt-0.5"></i>
+                    <div>
+                        <strong class="text-white block">Leitner 5 Kutu Kelime Kartları:</strong>
+                        Her gün 15 yeni C1/C2 akademik kelime, sesli telaffuz ve örnek cümlelerle 5 kutu hafıza sistemi.
+                    </div>
+                </div>
+
+                <div class="flex items-start space-x-3 p-3.5 rounded-2xl bg-slate-900/60 border border-slate-800">
+                    <i class="fa-solid fa-chart-pie text-violet-400 text-base mt-0.5"></i>
+                    <div>
+                        <strong class="text-white block">Net Hesaplama & Görsel Karne:</strong>
+                        $Net = D - Y/4$ formülü, Chart.js başarı grafiği ve yapay zeka destekli teşhis koçluk geri bildirimi.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-slate-800/80 bg-slate-950 py-8 text-center text-xs text-slate-500">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <span>© 2026 YKS & YDT Sınav Merkezi • 6 Günlük Hızlandırılmış Kamp Programı</span>
+            <div class="flex items-center space-x-3 text-slate-400">
+                <a href="gun-1.html" class="hover:text-sky-400 transition">Gün 1</a>
+                <span>•</span>
+                <a href="gun-2-ydt-ingilizce.html" class="hover:text-sky-400 transition">Gün 2</a>
+                <span>•</span>
+                <a href="gun-3-tyt-turkce.html" class="hover:text-sky-400 transition">Gün 3</a>
+                <span>•</span>
+                <a href="gun-4-tyt-matematik.html" class="hover:text-sky-400 transition">Gün 4</a>
+                <span>•</span>
+                <a href="gun-5-ydt-reading.html" class="hover:text-sky-400 transition">Gün 5</a>
+                <span>•</span>
+                <a href="gun-6-simulasyon.html" class="hover:text-sky-400 transition">Gün 6</a>
+                <span>•</span>
+                <a href="sinav_merkezi.html" class="hover:text-sky-400 transition font-bold text-sky-400">Master Sınav Merkezi</a>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
